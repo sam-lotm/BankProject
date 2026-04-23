@@ -23,8 +23,8 @@ def deposit(account_id: int, amount: float, description: str):
     })
     return {"account_id": account_id, "new_balance": new_balance}
 
-@router.post("/withdrawl")
-def waithdrawl(account_id: int, amount: float,description: str):
+@router.post("/withdrawal")
+def withdrawal(account_id: int, amount: float, description: str):
     account = fake_db["accounts"].get(account_id)
     if not account:
         return{"error": "Account not found"}
@@ -45,3 +45,12 @@ def waithdrawl(account_id: int, amount: float,description: str):
         "description": description
     })
     return {"account_id": account_id, "new_balance": new_balance}
+
+@router.get("/history")
+def get_history(account_id: int):
+    account = fake_db["accounts"].get(account_id)
+    if not account:
+        return{"error": "Account not found"}
+
+    history = [t for t in fake_db["transactions"] if t["account_id"] == account_id]
+    return {"account_id": account_id, "transactions": history}
